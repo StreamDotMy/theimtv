@@ -72,7 +72,11 @@ class VideoController extends Controller
             'description'   => ['required', 'string'],
         ]);
 
+
+        $user = auth()->user();
+
         Video::create([
+            'user_id'       => $user->id,
             'title'         => $request->input('title'),
             'synopsis'      => $request->input('synopsis'),
             'description'   => $request->input('description'),

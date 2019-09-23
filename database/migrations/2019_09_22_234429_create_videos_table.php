@@ -17,7 +17,7 @@ class CreateVideosTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id')->default(0);
 
-            $table->string('filename');
+            $table->string('filename')->nullable();
             $table->integer('length')->default(0);
             $table->integer('size')->default(0);
             $table->integer('processing_time')->default(0);
