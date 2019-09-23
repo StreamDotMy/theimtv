@@ -84,5 +84,22 @@ class VideoController extends Controller
 
         return redirect()->route('videos.index')->with('message', 'User successfully added.');
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
+  //  public function show($id)
+  //  {
+  //      $video = Video::findOrFail(($id));
+  //      return view('videos.show')->with('video',$video);
+  //  }    
     
+    public function show(Video $video)
+    {
+        //echo 'hello world';
+        return view('videos.show',compact('video'));
+    }
 }
