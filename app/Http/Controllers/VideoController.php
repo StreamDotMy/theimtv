@@ -6,6 +6,9 @@ use App\Video;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use App\Jobs\EncodeVideo;
 
 class VideoController extends Controller
 {
@@ -169,17 +172,40 @@ class VideoController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store_video(Request $request)
+    public function store_video(Request $request, $id)
     {
 		
-        $video = $request->file('file1');
+       // $uploaded = $request->file('file1');
 
+        // validate
         $request->validate([
 			'file1'   =>  'required|mimetypes:video/mp4,video/mpeg,video/quicktime,video/x-flv,video/x-matroska,video/avi,video/msvideo,video/x-msvideo',
 
         ]);
-  
-        echo 'upload pass';
+    
+        // store
+        $path = public_path().'/videos/' . $id;
+        if(!File::isDirectory($path)){
+           // Storage::disk('public')->put('/videos/' . $id . '/raw.file' , $video);
+            Storage::disk('public')->putFileAs(
+                '/videos/' . $id . '/raw', 
+                $request->file('file1'), 'source.mp4'
+            );
+        }
 
-        }        
+        // update metadata in video table        
+        $video = Video::find($id);
+        $video->is_uploaded = 1;
+        $video->filename =  $request->file('file1')->getClientOriginalName();
+        $video->size =  Storage::disk('public')->size('/videos/' . $id . '/raw/source.mp4');
+        $video->save();
+
+        // converting to H264 AAC for streaming
+        // send jobs
+		Log::info("Send job $id to EncodeVideo");
+        $this->dispatch(new EncodeVideo($store));
+
+        echo "done";
+
+    }        
 }
