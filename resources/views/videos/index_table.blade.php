@@ -4,7 +4,7 @@
       <th scope="col" style="width:5%">#</th>
       <th scope="col" style="width:40%">Title</th>
       <th scope="col">Synopsis</th>
-      <th scope="col" style="width:15%">Actions</th>
+      <th scope="col" style="width:20%">Actions</th>
     </tr>
     </thead>
   <tbody>
@@ -17,7 +17,10 @@
             <td>
       
                 <form action="{{ route('videos.destroy',$video->id) }}" method="POST">
-                    {{ $video->is_uploaded }}
+                    @if( $video->is_uploaded == 0 )
+                    <a class="btn btn-primary" href="{{ route('videos.upload',$video->id) }}"><i class="fa fa-upload"></i></a>
+                    @endif
+
                     <a class="btn btn-info" href="{{ route('videos.show',$video->id) }}"><i class="fa fa-search"></i></a>
     
                     <a class="btn btn-primary" href="{{ route('videos.edit',$video->id) }}"><i class="fa fa-edit"></i></a>

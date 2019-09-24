@@ -145,4 +145,41 @@ class VideoController extends Controller
         return redirect()->route('videos.index')
                          ->with('success','Video deleted successfully');
     }    
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */  
+    
+    public function upload($id)
+    {
+  
+        $video = Video::findOrFail($id);
+       // dd($video);
+        return view('videos.upload.form',compact('video'));
+    }    
+
+
+     /**
+     * Saving videos uploaded through XHR Request.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store_video(Request $request)
+    {
+		
+        $video = $request->file('file1');
+
+        $request->validate([
+			'file1'   =>  'required|mimetypes:video/mp4,video/mpeg,video/quicktime,video/x-flv,video/x-matroska,video/avi,video/msvideo,video/x-msvideo',
+
+        ]);
+  
+        echo 'upload pass';
+
+        }        
 }
