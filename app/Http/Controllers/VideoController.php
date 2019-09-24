@@ -27,8 +27,10 @@ class VideoController extends Controller
      */
     public function index()
     {
-        $videos = Video::all();
-        return view('videos.index', compact('videos'));
+        $videos = Video::latest()->paginate(5);
+  
+        return view('videos.index',compact('videos'))
+                ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -90,16 +92,57 @@ class VideoController extends Controller
      *
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
-     */
-  //  public function show($id)
-  //  {
-  //      $video = Video::findOrFail(($id));
-  //      return view('videos.show')->with('video',$video);
-  //  }    
+     */  
     
     public function show(Video $video)
     {
-        //echo 'hello world';
         return view('videos.show',compact('video'));
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Video  $video
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Video $video)
+    {
+        //dd($video);
+        return view('videos.edit',compact('video'));
+    }
+  
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Video  $video
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Video $video)
+    {
+        $request->validate([
+            'title'         => 'required',
+            'synopsis'      => 'required',
+            'description'   => 'required',
+        ]);
+  
+        $video->update($request->all());
+  
+        return redirect()->route('videos.index')
+                         ->with('success','Video updated successfully');
+    }   
+    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Video $video)
+    {
+        $video->delete();
+  
+        return redirect()->route('videos.index')
+                         ->with('success','Video deleted successfully');
+    }    
 }

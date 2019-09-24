@@ -3,7 +3,7 @@
                                 <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Title') }}</label>
     
                                 <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" required autocomplete="title" autofocus>
+                                    <input id="name" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{  old('title')  }}" required autocomplete="title" autofocus>
     
                                     @error('title')
                                         <span class="invalid-feedback" role="alert">
@@ -17,7 +17,7 @@
                                 <label for="synopsis" class="col-md-4 col-form-label text-md-right">{{ __('Synopsis') }}</label>
     
                                 <div class="col-md-6">
-                                    <input id="synopsis" type="synopsis" class="form-control @error('synopsis') is-invalid @enderror" name="synopsis" value="{{ old('synopsis') }}" required autocomplete="synopsis">
+                                    <input id="synopsis" type="synopsis" class="form-control @error('synopsis') is-invalid @enderror" name="synopsis" value="{{   old('synopsis')  }}" required autocomplete="synopsis">
     
                                     @error('synopsis')
                                         <span class="invalid-feedback" role="alert">
@@ -31,7 +31,7 @@
                                 <label for="description" class="col-md-4 col-form-label text-md-right">{{ __('Description') }}</label>
     
                                 <div class="col-md-6">
-                                    <textarea name="description" type="textarea" class="form-control @error('description') is-invalid @enderror" name="description" required autocomplete="description"></textarea>
+                                    <textarea name="description" type="textarea" class="form-control @error('description') is-invalid @enderror" name="description" required autocomplete="description">{{   old('description')  }}</textarea>
                 
     
                                     @error('description')
@@ -46,5 +46,7 @@
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fa fa-plus"></i> {{ __('Submit') }}
                                         </button>
+                 
                                     </div>
-                            </div>    
+                       
+                            </div>   

@@ -8,7 +8,7 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('videos.store') }}">
                         @csrf
-                        @include('videos.form')
+                        @include('videos.create_form')
                     </form>
                 </div>
             </div>

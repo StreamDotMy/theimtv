@@ -32,7 +32,7 @@
             <tr>
             <th style="width:5%" scope="col"></th>
             <th scope="row">
-                <a href="{{ route('videos.edit',['id' => $video->id]) }}" type="button" class="btn btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                <a class="btn btn-primary" href="{{ route('videos.edit',$video->id) }}"><i class="fa fa-edit"></i> Edit</a>
             </th>
             </tr>
     </thead>   
