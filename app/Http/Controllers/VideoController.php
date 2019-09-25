@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
-use App\Jobs\EncodeVideo;
+use Illuminate\Support\Facades\Log;
+use App\Jobs\ConvertVideoForStreaming;
+
 
 class VideoController extends Controller
 {
@@ -203,9 +205,10 @@ class VideoController extends Controller
         // converting to H264 AAC for streaming
         // send jobs
 		Log::info("Send job $id to EncodeVideo");
-        $this->dispatch(new EncodeVideo($store));
+        //$this->dispatch(new ConvertVideoForStreaming($video));
+        ConvertVideoForStreaming::dispatch($video);
 
-        echo "done";
+        echo "sent for encoding job";
 
     }        
 }

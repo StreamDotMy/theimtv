@@ -18,7 +18,9 @@
       
                 <form action="{{ route('videos.destroy',$video->id) }}" method="POST">
                     @if( $video->is_uploaded == 0 )
-                    <a class="btn btn-primary" href="{{ route('videos.upload',$video->id) }}"><i class="fa fa-upload"></i></a>
+                      <a class="btn btn-primary" href="{{ route('videos.upload',$video->id) }}"><i class="fa fa-upload"></i></a>
+                    @else
+                      <a class="btn btn-danger" href=""><i class="fa fa-play"></i></a>
                     @endif
 
                     <a class="btn btn-info" href="{{ route('videos.show',$video->id) }}"><i class="fa fa-search"></i></a>
