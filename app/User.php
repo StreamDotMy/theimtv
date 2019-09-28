@@ -40,7 +40,7 @@ class User extends Authenticatable
     /**
      * Videos owned by the user.
      */
-    public function user()
+    public function videos()
     {
         return $this->hasMany('App\Video');
     }    

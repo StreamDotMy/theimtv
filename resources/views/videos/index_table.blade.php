@@ -2,6 +2,7 @@
     <thead class="thead-dark">
     <tr>
       <th scope="col" style="width:5%">#</th>
+      <th scope="col" style="width:15%">Category</th>
       <th scope="col" style="width:40%">Title</th>
       <th scope="col">Synopsis</th>
       <th scope="col" style="width:20%">Actions</th>
@@ -12,6 +13,7 @@
     <?php foreach($videos as $video):?>
         <tr>
             <th scope="row">{{ $video->id }}</th>
+            <th scope="row">{{ $video->video_category->title }}</th>
             <td><a href="{{ route('videos.show',$video->id ) }} ">{{ $video->title }}</a></td>
             <td>{{ $video->synopsis }}</td>
             <td>

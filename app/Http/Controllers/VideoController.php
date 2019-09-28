@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Video;
+use App\VideoCategory;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -34,25 +35,10 @@ class VideoController extends Controller
     {
         $videos = Video::latest()->paginate(5);
   
-        return view('videos.index',compact('videos'))
-                ->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('videos.index',compact('videos'));
+               //->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
-    /**
-     * Get a validator for an incoming create request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'title' => ['required', 'string', 'max:255'],
-            'synopsis' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-
-        ]);
-    }
 
     /**
      * Create a new video instance after a valid addition.
@@ -62,7 +48,8 @@ class VideoController extends Controller
      */
     protected function create()
     {
-       return view('videos.create');
+       $categories = VideoCategory::all()->pluck('title', 'id');  
+       return view('videos.create')->with('categories', $categories);
     }  
 
     /**
@@ -73,7 +60,10 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
+
+      
         $validatedData = $request->validate([
+            'video_category_id'   => ['required', 'string'],
             'title'         => ['required', 'string', 'max:255'],
             'synopsis'      => ['required', 'string', 'max:255'],
             'description'   => ['required', 'string'],
@@ -81,15 +71,15 @@ class VideoController extends Controller
 
 
         $user = auth()->user();
-
         Video::create([
             'user_id'       => $user->id,
+            'video_category_id' => $request->input('video_category_id'),
             'title'         => $request->input('title'),
             'synopsis'      => $request->input('synopsis'),
             'description'   => $request->input('description'),
         ]);
 
-        return redirect()->route('videos.index')->with('message', 'User successfully added.');
+        return redirect()->route('videos.index')->with('message', 'Video successfully added.');
     }
 
     /**
@@ -112,8 +102,8 @@ class VideoController extends Controller
      */
     public function edit(Video $video)
     {
-        //dd($video);
-        return view('videos.edit',compact('video'));
+        $categories = VideoCategory::all()->pluck('title', 'id');  
+        return view('videos.edit',compact('video','categories'));
     }
   
     /**
@@ -126,6 +116,7 @@ class VideoController extends Controller
     public function update(Request $request, Video $video)
     {
         $request->validate([
+            'video_category_id'  => 'required',
             'title'         => 'required',
             'synopsis'      => 'required',
             'description'   => 'required',
@@ -205,10 +196,11 @@ class VideoController extends Controller
         // converting to H264 AAC for streaming
         // send jobs
 		Log::info("Send job $id to EncodeVideo");
-        //$this->dispatch(new ConvertVideoForStreaming($video));
         ConvertVideoForStreaming::dispatch($video);
 
-        echo "sent for encoding job";
+        return redirect()->route('videos.index')
+                         ->with('success','Video uploaded successfully');
+
 
     }        
 }

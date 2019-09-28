@@ -13,15 +13,23 @@ class Video extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'synopsis', 'description',
+        'title', 'synopsis', 'description', 'video_category_id',
     ];
     
     
     /**
-     * Get the user that owns the video.
+     * Get the User that owns the video.
      */
     public function user()
     {
         return $this->belongsTo('App\User');
     }
+
+    /**
+     * Get the VideoCategory that owns the video.
+     */
+    public function video_category()
+    {
+        return $this->belongsTo('App\VideoCategory');
+    }    
 }
