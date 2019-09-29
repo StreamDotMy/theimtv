@@ -3,19 +3,26 @@
     <tr>
       <th scope="col" style="width:5%">#</th>
       <th scope="col" style="width:15%">Category</th>
+      <th scope="col" style="width:15%">Encode Duration</th>
       <th scope="col" style="width:40%">Title</th>
-      <th scope="col">Synopsis</th>
+
       <th scope="col" style="width:20%">Actions</th>
     </tr>
     </thead>
   <tbody>
 
-    <?php foreach($videos as $video):?>
+    <?php 
+    foreach($videos as $video):
+      $t = round($video->processing_duration);
+      $duration = sprintf('%02d:%02d:%02d', ($t/3600),($t/60%60), $t%60);
+    
+    ?>
         <tr>
             <th scope="row">{{ $video->id }}</th>
             <th scope="row">{{ $video->video_category->title }}</th>
+            <th scope="row">{{ $duration }}</th>
             <td><a href="{{ route('videos.show',$video->id ) }} ">{{ $video->title }}</a></td>
-            <td>{{ $video->synopsis }}</td>
+
             <td>
       
                 <form action="{{ route('videos.destroy',$video->id) }}" method="POST">

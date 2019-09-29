@@ -38,11 +38,12 @@ class ConvertVideoForStreaming implements ShouldQueue
 
         $this->process_video();
         $this->generate_smil();
-        $this->video->processing_status = 1;
-        $this->video->save();
+
     }
 
     function process_video(){
+        $start = microtime(true);
+
         $folder =  Storage::disk('public')->path( 'videos/' . $this->video->id);
         $source =  Storage::disk('public')->path( 'videos/' . $this->video->id . '/raw/source.mp4' );
 		
@@ -61,6 +62,10 @@ class ConvertVideoForStreaming implements ShouldQueue
 				exec($c);		
 		}
         File::put("{$folder}/end.txt",'');	
+        
+        $this->video->processing_status = 1;
+        $this->video->processing_duration =  microtime(true) - $start;
+        $this->video->save();
     }
     
     function generate_smil()
