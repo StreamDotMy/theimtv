@@ -202,5 +202,46 @@ class VideoController extends Controller
                          ->with('success','Video uploaded successfully');
 
 
-    }        
+    }      
+    
+    
+   /**
+     * Display the specified resource.
+     *
+     * @param  $id
+     * @return \Illuminate\Http\Response
+     */  
+    
+    public function image($id)
+    {
+  
+        $video = Video::findOrFail($id);
+       // dd($video);
+        return view('videos.image.form',compact('video'));
+    }     
+
+    public function store_image(Request $request, $id)
+    {
+		
+        // validate | accept jpg only
+        $request->validate([
+            'file1'   =>  'required|mimetypes:image/jpg,image/jpeg',
+            'file2'   =>  'required|mimetypes:image/jpg,image/jpeg'
+        ]);
+    
+     
+        // store the asset
+        Storage::disk('public')->putFileAs(
+            '/videos/' . $id . '/image', 
+            $request->file('file1'), 'image1.jpg');
+        
+
+        // store the asset
+        Storage::disk('public')->putFileAs(
+            '/videos/' . $id . '/image', 
+            $request->file('file2'), 'image2.jpg');            
+
+        return redirect()->route('videos.index')
+                         ->with('success','Image uploaded successfully');
+    }      
 }
