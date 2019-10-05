@@ -26,7 +26,7 @@ class VideoCategoryController extends Controller
      */
     public function index()
     {
-        $video_categories = VideoCategory::latest()->paginate(5);
+        $video_categories = VideoCategory::latest()->paginate(20);
         return view('video_categories.index',compact('video_categories'));
     }
 

@@ -82,13 +82,6 @@
                                     <i class="fa fa-edit"></i> {{ __('Submit') }}
                                 </button>
 
-                                <div class="form-group row mb-0">
-                                        <div class="col-md-6 offset-md-4">
-                                            <button type="submit" class="btn btn-primary">
-                                                <i class="fa fa-plus"></i> {{ __('Submit') }}
-                                            </button>
-                                        </div>
-                                </div>   
                                 <a class="btn btn-danger" onclick="return confirm('Are you sure?')" href="{{route('users.delete', $user->id)}}"><i class="fa fa-trash"></i> Delete</a>
 
                             </div>

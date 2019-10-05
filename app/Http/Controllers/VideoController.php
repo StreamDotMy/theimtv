@@ -33,7 +33,7 @@ class VideoController extends Controller
      */
     public function index()
     {
-        $videos = Video::latest()->paginate(5);
+        $videos = Video::latest()->paginate(50);
   
         return view('videos.index',compact('videos'));
                //->with('i', (request()->input('page', 1) - 1) * 5);
@@ -225,8 +225,8 @@ class VideoController extends Controller
 		
         // validate | accept jpg only
         $request->validate([
-            'file1'   =>  'required|mimetypes:image/jpg,image/jpeg',
-            'file2'   =>  'required|mimetypes:image/jpg,image/jpeg'
+            'file1'   =>  'required|mimetypes:image/jpg,image/jpeg,image/png',
+            'file2'   =>  'required|mimetypes:image/jpg,image/jpeg,image/png'
         ]);
     
      
