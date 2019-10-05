@@ -15,15 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Auth::routes();
 
-Auth::routes(['register' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
 
 //Route::resource('users', 'UserController');
 
@@ -50,3 +45,5 @@ Route::post('/videos/{id}/store_image', 'VideoController@store_image')->name('vi
 
 // video categories controller
 Route::resource('video_categories', 'VideoCategoryController');
+
+Auth::routes(['register' => false]);
