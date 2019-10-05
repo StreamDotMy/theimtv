@@ -80,6 +80,7 @@ class ConvertVideoForStreaming implements ShouldQueue
         <video src=\"mp4:216p.mp4\"   system-bitrate=\"286000\"  />
         <video src=\"mp4:540p.mp4\"   system-bitrate=\"1200000\" />
         <video src=\"mp4:720p.mp4\"   system-bitrate=\"2000000\" />
+        <video src=\"mp4:1080p.mp4\"   system-bitrate=\"4000000\" />
         </switch>
         </body>
         </smil>
