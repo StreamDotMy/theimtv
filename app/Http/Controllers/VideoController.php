@@ -33,7 +33,10 @@ class VideoController extends Controller
      */
     public function index()
     {
-        $videos = Video::latest()->paginate(50);
+        //$videos = Video::latest()->paginate(50);
+	$videos = Video::orderBy('ordering', 'asc')
+		->paginate(50);
+
   
         return view('videos.index',compact('videos'));
                //->with('i', (request()->input('page', 1) - 1) * 5);

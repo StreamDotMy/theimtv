@@ -2,11 +2,12 @@
     <thead class="thead-dark">
     <tr>
       <th scope="col" style="width:5%">#</th>
+      <th scope="col" style="width:5%">Ordering</th>
       <th scope="col" style="width:15%">Category</th>
       <th scope="col" style="width:15%">Encode Duration</th>
-      <th scope="col" style="width:35%">Title</th>
+      <th scope="col" style="width:25%">Title</th>
 
-      <th scope="col" style="width:25%">Actions</th>
+      <th scope="col" style="width:40%">Actions</th>
     </tr>
     </thead>
   <tbody>
@@ -19,6 +20,7 @@
     ?>
         <tr>
             <th scope="row">{{ $video->id }}</th>
+            <th scope="row">{{ $video->ordering }}</th>
             <th scope="row">{{ $video->video_category->title }}</th>
             <th scope="row">{{ $duration }}</th>
             <th scope="row"> <a href="{{ route('videos.show',$video->id ) }} ">{{ $video->title }}</a></th>
@@ -31,7 +33,7 @@
                       <a class="btn btn-primary" href="{{ route('videos.upload',$video->id) }}"><i class="fa fa-upload"></i></a>
                     @elseif( $video->processing_duration == 0 )
           
-                        <a class="btn btn-primary" href="#"><i class="fa fa-hourglass"></i></a>
+                        <a class="btn btn-danger" href="#"><i class="fa fa-hourglass"></i></a>
                     @else 
                     <a class="btn btn-primary" href="{{ route('videos.upload',$video->id) }}"><i class="fa fa-play"></i></a>
                     @endif
