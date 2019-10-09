@@ -31,15 +31,28 @@ class VideoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id=null)
     {
         //$videos = Video::latest()->paginate(50);
-	$videos = Video::orderBy('ordering', 'asc')
-		->paginate(50);
+	    $categories = VideoCategory::all()->pluck('title', 'id');
+
+        if($id){
+            $videos =  Video::where([['video_category_id','=',$id]])
+                       ->orderBy('ordering', 'asc')
+                       ->paginate(50);
+        }else{
+            $videos =  Video::orderBy('ordering', 'asc')
+                                       ->paginate(50);
+        }
 
   
-        return view('videos.index',compact('videos'));
+        return view('videos.index',compact('videos','categories','id'));
                //->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    public function category($id)
+    {
+
     }
 
 

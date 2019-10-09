@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\VideoCategory;
 use Illuminate\Http\Request;
+use Validator;
 
 class VideoCategoryController extends Controller
 {
@@ -54,9 +55,13 @@ class VideoCategoryController extends Controller
     public function store(Request $request)
     {
         
+        Validator::extend('without_spaces', function($attr, $value){
+                return preg_match('/^\S*$/u', $value);
+        });
+
         $validatedData = $request->validate([
             'title'         => ['required', 'string', 'max:255'],
-            'prefix'        => ['required', 'string', 'max:255'],
+            'prefix'        => ['required', 'string', 'max:255', 'without_spaces'],
             'description'   => ['required', 'string'],
         ]);
 
@@ -72,10 +77,9 @@ class VideoCategoryController extends Controller
         return redirect()->route('video_categories.index')->with('message', 'Video Category successfully added.');
     }
 
-    public function edit(Video $video)
+    public function edit(VideoCategory $video_category)
     {
-        //dd($video);
-        return view('videos.edit',compact('video'));
+        return view('video_categories.edit')->with('video_category', $video_category);
     }
   
     /**
@@ -87,9 +91,16 @@ class VideoCategoryController extends Controller
      */
     public function update(Request $request, VideoCategory $VideoCategory)
     {
+
+       Validator::extend('without_spaces', function($attr, $value){
+                           return preg_match('/^\S*$/u', $value);
+                          });
+
+
+
         $request->validate([
             'title'         => 'required',
-            'prefix'        => 'required',
+            'prefix'        => 'required|alpha_dash',
             'description'   => 'required',
         ]);
   
@@ -112,4 +123,5 @@ class VideoCategoryController extends Controller
         return redirect()->route('video_categories.index')
                          ->with('success','Category deleted successfully');
     }     
+
 }

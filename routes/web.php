@@ -37,6 +37,7 @@ Route::get('/users/delete/{id}', 'UserController@delete')->name('users.delete');
 // videos controller
 Route::resource('videos', 'VideoController');
 
+Route::get('/videos/by_category/{id}', 'VideoController@index')->name('videos.by_category');
 Route::get('/videos/{id}/upload', 'VideoController@upload')->name('videos.upload');
 Route::post('/videos/{id}/store_video', 'VideoController@store_video')->name('videos.store_video');
 

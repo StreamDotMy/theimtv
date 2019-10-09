@@ -1,3 +1,20 @@
+<table style="margin-bottom:20px">
+    <tr>
+        <td>
+        <select name="video_category_id" class="form-control" id="video_category_id" onchange="javascript:location.href = this.value;">
+            <option value="{{ route('videos.index') }} ">All</option>
+            @foreach ($categories as $category_id => $category_title)
+                @if($category_id == $id)
+                    <option selected value="{{ route('videos.by_category',$category_id) }} ">{{ $category_title  }}</option>
+                @else
+                    <option value="{{ route('videos.by_category',$category_id) }} ">{{ $category_title  }}</option>
+                @endif
+            @endforeach
+        </select>
+       </td>
+   </tr>
+</table>
+
 <table class="table">
     <thead class="thead-dark">
     <tr>
@@ -6,8 +23,7 @@
       <th scope="col" style="width:15%">Category</th>
       <th scope="col" style="width:15%">Encode Duration</th>
       <th scope="col" style="width:25%">Title</th>
-
-      <th scope="col" style="width:40%">Actions</th>
+      <th scope="col" style="width:20%">Actions</th>
     </tr>
     </thead>
   <tbody>
@@ -23,7 +39,7 @@
             <th scope="row">{{ $video->ordering }}</th>
             <th scope="row">{{ $video->video_category->title }}</th>
             <th scope="row">{{ $duration }}</th>
-            <th scope="row"> <a href="{{ route('videos.show',$video->id ) }} ">{{ $video->title }}</a></th>
+            <th scope="row" width=""> <a href="{{ route('videos.show',$video->id ) }} ">{{ $video->title }}</a></th>
 
             <td>
       
