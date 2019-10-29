@@ -132,10 +132,10 @@ class VideoController extends Controller
     public function update(Request $request, Video $video)
     {
         $request->validate([
-            'video_category_id'  => 'required',
-            'title'         => 'required',
-            'synopsis'      => 'required',
-            'description'   => 'required',
+            'video_category_id'     => 'required',
+            'title'                 => 'required',
+            'synopsis'              => 'required',
+            'description'           => 'required',
         ]);
   
         $video->update($request->all());

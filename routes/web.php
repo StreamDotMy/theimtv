@@ -21,18 +21,23 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 //Route::resource('users', 'UserController');
+Route::group([
+    'prefix'        => 'users',
+    'as'            => 'users.',
+    'middleware'    => ['auth']
+], function(){
 
-Route::get('/users', 'UserController@index')->name('users.index');
+    Route::get('/', 'UserController@index')->name('index');
+    Route::get('/create', 'UserController@create')->name('create');
+    Route::post('/', 'UserController@store')->name('store');
+    Route::get('/{user}/edit', 'UserController@edit')->name('edit');
+    Route::post('/{user}/update', 'UserController@update')->name('update');
+    Route::get('/{user}/show', 'UserController@show')->name('show');
+    Route::get('/{user}/delete', 'UserController@delete')->name('delete');
 
-Route::get('/users/create', 'UserController@create')->name('users.create');
-Route::post('/users', 'UserController@store')->name('users.store');
+});
 
-Route::get('/users/edit/{id}', 'UserController@edit')->name('users.edit');
-Route::post('/users/update/{id}', 'UserController@update')->name('users.update');
 
-Route::get('/users/show/{id}', 'UserController@show')->name('users.show');
-
-Route::get('/users/delete/{id}', 'UserController@delete')->name('users.delete');
 
 // videos controller
 Route::resource('videos', 'VideoController');

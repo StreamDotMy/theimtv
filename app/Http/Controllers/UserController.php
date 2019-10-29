@@ -7,20 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller
-{
+use App\Http\Requests\CreateUserRequest; // Validation
+use App\Http\Requests\UpdateUserRequest; // Validation
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-    
-    
+class UserController extends Controller
+{   
     /**
      * Display a listing of the resource.
      *
@@ -28,23 +19,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate(15);
         return view('users.index', compact('users'));
-    }
-
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name'      => ['required', 'string', 'max:255'],
-            'email'     => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password'  => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
     }
 
     /**
@@ -58,28 +34,19 @@ class UserController extends Controller
        return view('users.create');
     }
 
-
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateUserRequest $request)
     {
-        $validatedData = $request->validate([
-            'name'      => ['required', 'string', 'max:255'],
-            'email'     => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password'  => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
         User::create([
             'name'      => $request->input('name'),
             'email'     => $request->input('email'),
             'password'  => Hash::make($request->input('password')),
         ]);
-
         return redirect()->route('users.index')->with('message', 'User successfully added.');
     }
 
@@ -101,39 +68,23 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = User::findOrFail(($id));
+        //$user = User::findOrFail(($id));
         return view('users.edit')->with('user',$user);
     }
 
 
-    public function update($id,Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $validatedData = $request->validate([
-            'name'      => ['required', 'string', 'max:255'],
-            'email'     => ['required', 'string', 'email', 'max:255'],
-        ]);
-
-
-        $user= User::findOrFail($id);
-
-        //$request contain your post data sent from your edit from
-        //$user is an object which contains the column names of your table
-
-        //Set user object attributes
         $user->name = $request->input('name');
         $user->email = $request->input('email');
 
         if( !empty( $request->input('new_password') ) ){
             $user->password =  Hash::make($request->input('new_password'));
         }
-    
-        // Save/update user. 
-        // This will will update your the row in ur db.
         $user->save();        
-
-        return redirect()->route('users.show', $id)->with('message', 'User successfully updated.');
+        return redirect()->route('users.index')->with('message', 'User successfully updated.');
     }
 
     /**
@@ -142,16 +93,14 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function delete(User $user)
     {
         // check if id no equal to 1
-        if($id != 1){
-            $user = User::find($id);
+        if($user->id != 1){
             $user->delete();
             return redirect()->route('users.index')->with('message', 'User successfully deleted.');
         } else {
-
-            return redirect()->back()->with('message', 'Cannot delete root');
+            return redirect()->back()->with('error', 'Cannot delete root !');
         }
     }
 }

@@ -55,7 +55,7 @@
             <tr>
             <th style="width:5%" scope="col"></th>
             <th scope="row">
-                <a href="{{ route('users.edit',['id' => $user->id]) }}" type="button" class="btn btn-primary"><i class="fa fa-edit"></i> Edit</a>
+                <a href="{{ route('users.edit', $user ) }}" type="button" class="btn btn-primary"><i class="fa fa-edit"></i> Edit</a>
             </th>
             </tr>
     </thead>      

@@ -6,10 +6,8 @@
                 <div class="card-header">{{ __('Update User Profile ')  }}</div>
 
                 <div class="card-body">
-                        <form method="POST" action="{{ route('users.update', $user->id) }}">
+                        <form method="POST" action="{{ route('users.update', $user) }}">
                         @csrf
-                    
-
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
@@ -82,7 +80,8 @@
                                     <i class="fa fa-edit"></i> {{ __('Submit') }}
                                 </button>
 
-                                <a class="btn btn-danger" onclick="return confirm('Are you sure?')" href="{{route('users.delete', $user->id)}}"><i class="fa fa-trash"></i> Delete</a>
+                               <a  onclick="return confirm('Are you sure?')" class="btn btn-danger" href="{{ route('users.delete',$user) }} "><i class="fa fa-trash"></i> Delete</a>
+       
 
                             </div>
                         </div>
