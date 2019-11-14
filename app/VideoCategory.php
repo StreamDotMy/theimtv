@@ -18,8 +18,14 @@ class VideoCategory extends Model
     /**
      * Videos owned by the VideoCategory.
      */
+    //public function videos()
+    //{
+    //    return $this->belongsToMany('App\Video');
+    //} 
     public function videos()
     {
-        return $this->hasMany('App\Video');
-    } 
+        //return $this->belongsToMany('App\VideoCategory');
+        // Model | table_name | fk1 | fk2
+        return $this->belongsToMany('App\Video', 'category_video', 'category_id', 'video_id',);
+    }
 }

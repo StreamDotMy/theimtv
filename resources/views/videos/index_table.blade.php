@@ -20,7 +20,6 @@
     <tr>
       <th scope="col" style="width:5%">#</th>
       <th scope="col" style="width:5%">Ordering</th>
-      <th scope="col" style="width:15%">Category</th>
       <th scope="col" style="width:15%">Encode Duration</th>
       <th scope="col" style="width:25%">Title</th>
       <th scope="col" style="width:20%">Actions</th>
@@ -37,7 +36,6 @@
         <tr>
             <th scope="row">{{ $video->id }}</th>
             <th scope="row">{{ $video->ordering }}</th>
-            <th scope="row">{{ $video->video_category->title }}</th>
             <th scope="row">{{ $duration }}</th>
             <th scope="row" width=""> <a href="{{ route('videos.show',$video->id ) }} ">{{ $video->title }}</a></th>
 

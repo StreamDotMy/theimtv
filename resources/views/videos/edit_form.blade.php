@@ -2,23 +2,32 @@
                                 <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Category') }}</label>
 
                                 <div class="col-md-6">
-                                    <select name="video_category_id" class="form-control" id="video_category_id">
+
                                         @foreach ($categories as $id => $title)
-                                            <option 
-                                            value="{{ $id }}" 
-                                            @if ( $video->video_category_id == $id )
-                                                selected 
-                                            @endif
-                                            >{{ $title  }}</option>
-                                        @endforeach       
-                                    </select>
-                                    @error('video_category_id')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
+                                            @php $checked = null @endphp
+                                            @foreach($current_categories as $current)
+                                                @if($current->id == $id)
+                                                    @php $checked = 'checked' @endphp
+                                                @endif  
+                                            @endforeach       
+                                        
+                                                <div class="form-check">
+                                                <input name="categories[]" class="form-check-input" type="checkbox" {{ $checked }} value="{{ $id }}" id="defaultCheck1">
+                                                    <label class="form-check-label" for="defaultCheck1">
+                                                        {{ $title }}
+                                                    </label>
+                                                </div>
+                                           
+                                        @endforeach
+
+
+                                    @error('categories')
+                                        <span class="text-danger" role="alert">
+                                            <strong><p style="font-size:12px">{{ $message }}</p></strong>
                                         </span>
                                     @enderror
                                 </div>
-                        </div>   
+                        </div>    
 
                         <div class="form-group row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Title') }}</label>

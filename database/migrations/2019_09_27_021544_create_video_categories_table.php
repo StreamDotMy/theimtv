@@ -14,7 +14,7 @@ class CreateVideoCategoriesTable extends Migration
     public function up()
     {
         Schema::create('video_categories', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id')->unsigned();
             $table->string('title')->index();
             $table->string('prefix')->nullable();
             $table->longText('description')->nullable();

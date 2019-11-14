@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Video;
@@ -79,21 +78,31 @@ class VideoController extends Controller
 
       
         $validatedData = $request->validate([
-            'video_category_id'   => ['required', 'string'],
-            'title'         => ['required', 'string', 'max:255'],
-            'synopsis'      => ['required', 'string', 'max:255'],
-            'description'   => ['required', 'string'],
+            //'video_category_id'     => ['required', 'string'],
+            'categories'            => ['required'],
+            'title'                 => ['required', 'string', 'max:255'],
+            'synopsis'              => ['required', 'string', 'max:255'],
+            'description'           => ['required', 'string'],
+            
+            'ordering', 
+            'title', 
+            'synopsis', 
+            'description', 
+            'video_category_id',
+            'genre',
+            'casts',
+            'director',
+            'duration',
+            'classification',
+            'year_of_release',
+            'start_date',
+            'end_date'
         ]);
 
 
         $user = auth()->user();
-        Video::create([
-            'user_id'       => $user->id,
-            'video_category_id' => $request->input('video_category_id'),
-            'title'         => $request->input('title'),
-            'synopsis'      => $request->input('synopsis'),
-            'description'   => $request->input('description'),
-        ]);
+        Video::create($request->all())->categories()->attach($request->input('categories'));
+
 
         return redirect()->route('videos.index')->with('message', 'Video successfully added.');
     }
@@ -107,7 +116,8 @@ class VideoController extends Controller
     
     public function show(Video $video)
     {
-        return view('videos.show',compact('video'));
+        $categories = $video->categories()->get();
+        return view('videos.show',compact('video','categories'));
     }
 
     /**
@@ -119,7 +129,8 @@ class VideoController extends Controller
     public function edit(Video $video)
     {
         $categories = VideoCategory::all()->pluck('title', 'id');  
-        return view('videos.edit',compact('video','categories'));
+        $current_categories = $video->categories()->get();
+        return view('videos.edit',compact('video','categories','current_categories'));
     }
   
     /**
@@ -132,14 +143,14 @@ class VideoController extends Controller
     public function update(Request $request, Video $video)
     {
         $request->validate([
-            'video_category_id'     => 'required',
+            'categories'            => 'required',
             'title'                 => 'required',
             'synopsis'              => 'required',
             'description'           => 'required',
         ]);
-  
-        $video->update($request->all());
-  
+
+        $video->update($request->all( $request->input('categories') ));
+        $video->categories()->sync( $request->input('categories') );
         return redirect()->route('videos.index')
                          ->with('success','Video updated successfully');
     }   

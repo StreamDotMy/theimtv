@@ -52,4 +52,4 @@ Route::post('/videos/{id}/store_image', 'VideoController@store_image')->name('vi
 // video categories controller
 Route::resource('video_categories', 'VideoCategoryController');
 
-Auth::routes(['register' => false]);
+Auth::routes(['register' => true]);

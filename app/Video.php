@@ -24,6 +24,8 @@ class Video extends Model
         'duration',
         'classification',
         'year_of_release',
+        'start_date',
+        'end_date'
     ];
     
     
@@ -38,8 +40,18 @@ class Video extends Model
     /**
      * Get the VideoCategory that owns the video.
      */
-    public function video_category()
+   // public function video_category()
+   // {
+   //     return $this->belongsTo('App\VideoCategory');
+   // }    
+
+    /**
+     *  Video belongsToMany Category
+     */
+    public function categories()
     {
-        return $this->belongsTo('App\VideoCategory');
-    }    
+        //return $this->belongsToMany('App\VideoCategory');
+        // Model | table_name | fk1 | fk2
+        return $this->belongsToMany('App\VideoCategory', 'category_video', 'video_id', 'category_id');
+    }
 }
