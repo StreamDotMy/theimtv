@@ -26,6 +26,8 @@ class Video extends Model
         'year_of_release',
         'start_date',
         'end_date'
+
+        
     ];
     
     
@@ -37,13 +39,18 @@ class Video extends Model
         return $this->belongsTo('App\User');
     }
 
+ 
     /**
-     * Get the VideoCategory that owns the video.
+     *  Video belongsToMany Category
      */
-   // public function video_category()
-   // {
-   //     return $this->belongsTo('App\VideoCategory');
-   // }    
+    public function genres()
+    {
+        //return $this->belongsToMany('App\VideoCategory');
+        // Model | table_name | fk1 | fk2
+        //return $this->belongsToMany('App\GenreVideo', 'genre_video', 'video_id', 'genre_id');
+        //return $this->belongsToMany('App\Role', 'role_user', 'user_id', 'role_id');
+        return $this->belongsToMany('App\Genre', 'genre_videos', 'video_id', 'genre_id');
+    }
 
     /**
      *  Video belongsToMany Category
@@ -52,6 +59,9 @@ class Video extends Model
     {
         //return $this->belongsToMany('App\VideoCategory');
         // Model | table_name | fk1 | fk2
+        //return $this->belongsToMany('App\VideoCategory', 'category_video', 'video_id', 'category_id');
         return $this->belongsToMany('App\VideoCategory', 'category_video', 'video_id', 'category_id');
     }
+
+
 }

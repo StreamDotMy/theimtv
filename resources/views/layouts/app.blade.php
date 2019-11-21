@@ -65,6 +65,9 @@
                                     <a class="dropdown-item" href="{{ route('video_categories.index') }}">
                                         Category   
                                     </a>
+                                    <a class="dropdown-item" href="{{ route('genres.index') }}">
+                                        Genre   
+                                    </a>
                                     <a class="dropdown-item" href="{{ route('videos.index') }}">
                                         Asset   
                                     </a>

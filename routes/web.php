@@ -49,7 +49,10 @@ Route::post('/videos/{id}/store_video', 'VideoController@store_video')->name('vi
 Route::get('/videos/{id}/image', 'VideoController@image')->name('videos.image');
 Route::post('/videos/{id}/store_image', 'VideoController@store_image')->name('videos.store_image');
 
-// video categories controller
+// video_categories controller
 Route::resource('video_categories', 'VideoCategoryController');
+
+// genre 
+Route::resource('genres', 'GenreController');
 
 Auth::routes(['register' => true]);

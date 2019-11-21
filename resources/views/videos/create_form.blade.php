@@ -24,7 +24,7 @@
 
                 @foreach ($categories as $id => $title)
                 <div class="form-check">
-                    <input name="categories[]" class="form-check-input" type="checkbox" value="{{ $id }}" id="defaultCheck1">
+                    <input @if(is_array(old('categories')) && in_array($id, old('categories'))) checked @endif name="categories[]" class="form-check-input" type="checkbox" value="{{ $id }}" id="defaultCheck1">
                     <label class="form-check-label" for="defaultCheck1">
                         {{ $title }}
                     </label>
@@ -40,6 +40,30 @@
         </div>
 </div>  
 
+
+<div class="form-group row">
+        <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Genre') }}</label>
+
+        <div class="col-md-6">
+
+                @foreach ($genres as $id => $title)
+                <div class="form-check">
+                    <input @if(is_array(old('genres')) && in_array($id, old('genres'))) checked @endif name="genres[]" class="form-check-input" type="checkbox" value="{{ $id }}" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                        {{ $title }}
+                    </label>
+                </div>
+                @endforeach
+
+
+            @error('genres')
+                <span class="text-danger" role="alert">
+                    <strong><p style="font-size:12px">{{ $message }}</p></strong>
+                </span>
+            @enderror
+        </div>
+</div>
+
 <div class="form-group row">
     <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Title') }}</label>
 
@@ -54,11 +78,12 @@
     </div>
 </div>
 
+{{--
 <div class="form-group row">
     <label for="genre" class="col-md-4 col-form-label text-md-right">{{ __('Genre') }}</label>
 
     <div class="col-md-6">
-        <input id="name" type="text" class="form-control @error('genre') is-invalid @enderror" name="genre" value="{{  old('genre')  }}" required autocomplete="genre" autofocus>
+        <input id="name" type="text" class="form-control @error('genre') is-invalid @enderror" name="genres" value="{{  old('genre')  }}" required autocomplete="genre" autofocus>
 
         @error('genre')
             <span class="invalid-feedback" role="alert">
@@ -67,6 +92,7 @@
         @enderror
     </div>
 </div>
+--}}
 
 
 <div class="form-group row">

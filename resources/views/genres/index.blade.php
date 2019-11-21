@@ -10,14 +10,14 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-                <li class="breadcrumb-item">Category</li>
+                <li class="breadcrumb-item">Genre Category</li>
         </nav>
             
             <div class="card">
-                <div class="card-header h1">Category Management
+                <div class="card-header h1">Genre Management
 
                     <div class="pull-right">
-                            <a href="{{ route('video_categories.create') }}" type="button" class="btn btn-default"><i class="fa fa-plus"></i> Create</a>    
+                            <a href="{{ route('genres.create') }}" type="button" class="btn btn-default"><i class="fa fa-plus"></i> Create</a>    
                     </div>    
                 </div>
                 <div class="card-body">
@@ -32,7 +32,7 @@
                         <p>{{ $message }}</p>
                     </div>
                     @endif
-					@include('video_categories.index_table')
+					@include('genres.index_table')
                 </div>
             </div>
         </div>

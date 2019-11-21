@@ -3,8 +3,13 @@ namespace App\Http\Controllers;
 
 use App\Video;
 use App\VideoCategory;
+use App\Genre;
+use App\GenreVideo;
 use App\User;
 use Illuminate\Http\Request;
+use App\Http\Requests\VideoStoreRequest;
+
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
@@ -63,8 +68,9 @@ class VideoController extends Controller
      */
     protected function create()
     {
-       $categories = VideoCategory::all()->pluck('title', 'id');  
-       return view('videos.create')->with('categories', $categories);
+       $genres      = Genre::all()->pluck('title', 'id');  
+       $categories  = VideoCategory::all()->pluck('title', 'id');  
+       return view('videos.create')->with( compact('categories','genres'));
     }  
 
     /**
@@ -73,36 +79,16 @@ class VideoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(VideoStoreRequest $request)
     {
-
-      
-        $validatedData = $request->validate([
-            //'video_category_id'     => ['required', 'string'],
-            'categories'            => ['required'],
-            'title'                 => ['required', 'string', 'max:255'],
-            'synopsis'              => ['required', 'string', 'max:255'],
-            'description'           => ['required', 'string'],
-            
-            'ordering', 
-            'title', 
-            'synopsis', 
-            'description', 
-            'video_category_id',
-            'genre',
-            'casts',
-            'director',
-            'duration',
-            'classification',
-            'year_of_release',
-            'start_date',
-            'end_date'
-        ]);
-
-
         $user = auth()->user();
-        Video::create($request->all())->categories()->attach($request->input('categories'));
+        $create = Video::create($request->all());
+            //->genres()->attach($request->input('genres'));
+           // ->genres()->attach( $request->input('categories'));
 
+        $video = Video::find($create->id);
+        $video->genres()->attach( $request->input('genres') ); 
+        $video->categories()->attach( $request->input('categories') ); 
 
         return redirect()->route('videos.index')->with('message', 'Video successfully added.');
     }
@@ -129,8 +115,11 @@ class VideoController extends Controller
     public function edit(Video $video)
     {
         $categories = VideoCategory::all()->pluck('title', 'id');  
+        $genres     = Genre::all()->pluck('title', 'id');
         $current_categories = $video->categories()->get();
-        return view('videos.edit',compact('video','categories','current_categories'));
+        $current_genres     = $video->genres()->get();
+        //dd($current_genres);
+        return view('videos.edit',compact('video','categories','genres','current_categories','current_genres'));
     }
   
     /**
@@ -144,13 +133,15 @@ class VideoController extends Controller
     {
         $request->validate([
             'categories'            => 'required',
+            'genres'                => 'required',
             'title'                 => 'required',
             'synopsis'              => 'required',
             'description'           => 'required',
         ]);
 
-        $video->update($request->all( $request->input('categories') ));
+        $video->update($request->all());
         $video->categories()->sync( $request->input('categories') );
+        $video->genres()->sync( $request->input('genres') );
         return redirect()->route('videos.index')
                          ->with('success','Video updated successfully');
     }   
