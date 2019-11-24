@@ -19,7 +19,6 @@
                 </ol>
             </nav>
 
-    
             @include('videos.create_table')
     </div>
     

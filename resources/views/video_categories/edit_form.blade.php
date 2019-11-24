@@ -13,19 +13,7 @@
                                 </div>
                             </div>
     
-                            <div class="form-group row">
-                                <label for="prefix" class="col-md-4 col-form-label text-md-right">{{ __('Prefix') }}</label>
-    
-                                <div class="col-md-6">
-                                    <input id="synopsis" type="synopsis" class="form-control @error('prefix') is-invalid @enderror" name="prefix" value="{{   $video_category->prefix  }}" required autocomplete="prefix">
-    
-                                    @error('prefix')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
+
     
                             <div class="form-group row">
                                 <label for="description" class="col-md-4 col-form-label text-md-right">{{ __('Description') }}</label>

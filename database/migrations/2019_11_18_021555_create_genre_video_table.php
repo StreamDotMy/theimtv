@@ -30,6 +30,6 @@ class CreateGenreVideoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('genre_video');
+        Schema::dropIfExists('genre_videos');
     }
 }

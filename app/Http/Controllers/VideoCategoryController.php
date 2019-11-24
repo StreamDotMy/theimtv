@@ -61,7 +61,6 @@ class VideoCategoryController extends Controller
 
         $validatedData = $request->validate([
             'title'         => ['required', 'string', 'max:255'],
-            'prefix'        => ['required', 'string', 'max:255', 'without_spaces'],
             'description'   => ['required', 'string'],
         ]);
 
@@ -70,7 +69,6 @@ class VideoCategoryController extends Controller
 
         VideoCategory::create([
             'title'         => $request->input('title'),
-            'prefix'        => $request->input('prefix'),
             'description'   => $request->input('description'),
         ]);
 
@@ -100,7 +98,7 @@ class VideoCategoryController extends Controller
 
         $request->validate([
             'title'         => 'required',
-            'prefix'        => 'required|alpha_dash',
+            //'prefix'        => 'required|alpha_dash',
             'description'   => 'required',
         ]);
   

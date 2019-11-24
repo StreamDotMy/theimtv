@@ -70,7 +70,8 @@ class VideoController extends Controller
     {
        $genres      = Genre::all()->pluck('title', 'id');  
        $categories  = VideoCategory::all()->pluck('title', 'id');  
-       return view('videos.create')->with( compact('categories','genres'));
+       $classifications = Video::classifications();
+       return view('videos.create')->with( compact('categories','genres','classifications'));
     }  
 
     /**
@@ -118,8 +119,9 @@ class VideoController extends Controller
         $genres     = Genre::all()->pluck('title', 'id');
         $current_categories = $video->categories()->get();
         $current_genres     = $video->genres()->get();
+        $classifications = Video::classifications();
         //dd($current_genres);
-        return view('videos.edit',compact('video','categories','genres','current_categories','current_genres'));
+        return view('videos.edit',compact('video','categories','genres','current_categories','current_genres','classifications'));
     }
   
     /**

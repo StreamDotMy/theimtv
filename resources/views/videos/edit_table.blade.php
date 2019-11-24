@@ -9,7 +9,8 @@
                     <form action="{{ route('videos.update',$video->id) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        @include('videos.edit_form')  
+                        @include('videos.create_form')  
+                        
                    </form>
                 </div>
             </div>

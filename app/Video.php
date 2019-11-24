@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Video extends Model
 {
@@ -22,7 +23,7 @@ class Video extends Model
         'casts',
         'director',
         'duration',
-        'classification',
+        'classifications',
         'year_of_release',
         'start_date',
         'end_date'
@@ -62,6 +63,20 @@ class Video extends Model
         //return $this->belongsToMany('App\VideoCategory', 'category_video', 'video_id', 'category_id');
         return $this->belongsToMany('App\VideoCategory', 'category_video', 'video_id', 'category_id');
     }
+
+    public static function classifications(){
+        
+        $name = 'classifications';
+        $instance = new Video; // create an instance of the model to be able to get the table name
+        $type = DB::select( DB::raw('SHOW COLUMNS FROM '.$instance->getTable().' WHERE Field = "'.$name.'"') )[0]->Type;
+        preg_match('/^enum\((.*)\)$/', $type, $matches);
+        $enum = array();
+        foreach(explode(',', $matches[1]) as $value){
+            $v = trim( $value, "'" );
+            $enum[] = $v;
+        }
+        return $enum;
+    }  
 
 
 }

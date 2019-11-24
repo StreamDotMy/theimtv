@@ -1,74 +1,32 @@
-{{--
-<div class="form-group row">
-        <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Category') }}</label>
-
-        <div class="col-md-6">
-            <select name="video_category_id" class="form-control" id="video_category_id">
-                @foreach ($categories as $id => $title)
-                    <option value="{{ $id }} ">{{ $title  }}</option>
-                @endforeach       
-            </select>
-            @error('video_category_id')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
-        </div>
-</div>   
---}}               
-
-<div class="form-group row">
-        <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Category') }}</label>
-
-        <div class="col-md-6">
-
-                @foreach ($categories as $id => $title)
-                <div class="form-check">
-                    <input @if(is_array(old('categories')) && in_array($id, old('categories'))) checked @endif name="categories[]" class="form-check-input" type="checkbox" value="{{ $id }}" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                        {{ $title }}
-                    </label>
-                </div>
-                @endforeach
-
-
-            @error('categories')
-                <span class="text-danger" role="alert">
-                    <strong><p style="font-size:12px">{{ $message }}</p></strong>
-                </span>
-            @enderror
-        </div>
-</div>  
-
-
-<div class="form-group row">
-        <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Genre') }}</label>
-
-        <div class="col-md-6">
-
-                @foreach ($genres as $id => $title)
-                <div class="form-check">
-                    <input @if(is_array(old('genres')) && in_array($id, old('genres'))) checked @endif name="genres[]" class="form-check-input" type="checkbox" value="{{ $id }}" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                        {{ $title }}
-                    </label>
-                </div>
-                @endforeach
-
-
-            @error('genres')
-                <span class="text-danger" role="alert">
-                    <strong><p style="font-size:12px">{{ $message }}</p></strong>
-                </span>
-            @enderror
-        </div>
+             
+@if ($errors->any())
+<div class="card">
+    <div class="card-header">
+        @foreach ($errors->all() as $error)
+        <div class="invalid-feedback d-block"> <strong>{{$error}}</strong></div>
+        @endforeach
+    </div>
 </div>
+<hr />
+ @endif
+ 
+
+ @if( Route::currentRouteName() == 'videos.create')
+    @include('videos.create_checkboxes')
+ @else
+     @include('videos.edit_checkboxes')
+ @endif
 
 <div class="form-group row">
     <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Title') }}</label>
 
     <div class="col-md-6">
-        <input id="name" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{  old('title')  }}" >
+        <input  id="name" 
+                type="text" 
+                class="form-control @error('title') is-invalid @enderror" 
+                name="title" 
+                value="{{ old('title', isset($video->title) ? $video->title : null ) }}" 
+        />
 
         @error('title')
             <span class="invalid-feedback" role="alert">
@@ -78,42 +36,18 @@
     </div>
 </div>
 
-{{--
-<div class="form-group row">
-    <label for="genre" class="col-md-4 col-form-label text-md-right">{{ __('Genre') }}</label>
 
-    <div class="col-md-6">
-        <input id="name" type="text" class="form-control @error('genre') is-invalid @enderror" name="genres" value="{{  old('genre')  }}" required autocomplete="genre" autofocus>
-
-        @error('genre')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-    </div>
-</div>
---}}
-
-
-<div class="form-group row">
-    <label for="synopsis" class="col-md-4 col-form-label text-md-right">{{ __('Synopsis') }}</label>
-
-    <div class="col-md-6">
-        <input id="synopsis" type="synopsis" class="form-control @error('synopsis') is-invalid @enderror" name="synopsis" value="{{   old('synopsis')  }}" required autocomplete="synopsis">
-
-        @error('synopsis')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-    </div>
-</div>
 
 <div class="form-group row">
     <label for="casts" class="col-md-4 col-form-label text-md-right">{{ __('Casts') }}</label>
 
     <div class="col-md-6">
-        <input id="cast" type="text" class="form-control @error('casts') is-invalid @enderror" name="casts" value="{{  old('casts')  }}" required autocomplete="casts" autofocus>
+        <input  id="casts" 
+                type="text" 
+                class="form-control @error('casts') is-invalid @enderror" 
+                name="casts" 
+                value="{{ old('casts', isset($video->casts) ? $video->casts : null ) }}"  
+        />
 
         @error('casts')
             <span class="invalid-feedback" role="alert">
@@ -127,7 +61,13 @@
     <label for="director" class="col-md-4 col-form-label text-md-right">{{ __('Director') }}</label>
 
     <div class="col-md-6">
-        <input id="name" type="text" class="form-control @error('director') is-invalid @enderror" name="director" value="{{  old('director')  }}" required autocomplete="director" autofocus>
+        <input 
+            id="name" 
+            type="text" 
+            class="form-control @error('director') is-invalid @enderror" 
+            name="director" 
+            value="{{ old('director', isset($video->director) ? $video->director : null ) }}"
+        />
 
         @error('director')
             <span class="invalid-feedback" role="alert">
@@ -141,7 +81,12 @@
     <label for="duration" class="col-md-4 col-form-label text-md-right">{{ __('Duration') }}</label>
 
     <div class="col-md-6">
-        <input id="duration" type="text" class="form-control @error('duration') is-invalid @enderror" name="duration" value="{{  old('duration')  }}" required autocomplete="duration" autofocus>
+        <input  id="duration" 
+                type="text" 
+                class="form-control @error('duration') is-invalid @enderror" 
+                name="duration" 
+                value="{{ old('duration', isset($video->duration) ? $video->duration : null ) }}"
+        />
 
         @error('duration')
             <span class="invalid-feedback" role="alert">
@@ -156,8 +101,13 @@
     <label for="year_of_release" class="col-md-4 col-form-label text-md-right">{{ __('Year Of Release') }}</label>
 
     <div class="col-md-6">
-        <input id="name" type="text" class="form-control @error('year_of_release') is-invalid @enderror" name="year_of_release" value="{{  old('year_of_release')  }}" required autocomplete="year_of_release" autofocus>
-
+      <select class="form-control  @error('year_of_release') is-invalid @enderror" name="year_of_release">
+            <option value="0">Choose Year</option>
+             @for ($year=1930; $year <= date('Y'); $year++)
+              <option value="{{ $year }}"
+              @if ($year == old('year_of_release', isset($video->year_of_release) ? $video->year_of_release : null )) selected="selected" @endif >{{ $year }}</option>
+             @endfor
+        </select>
         @error('year_of_release')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -170,9 +120,16 @@
     <label for="classification" class="col-md-4 col-form-label text-md-right">{{ __('Clasification') }}</label>
 
     <div class="col-md-6">
-        <input id="classification" type="text" class="form-control @error('classifications') is-invalid @enderror" name="classification" value="{{  old('classification')  }}" required autocomplete="classification" autofocus>
-
-        @error('classification')
+        <select  name="classifications" class="form-control @error('classifications') is-invalid @enderror">
+            <option value="0">Choose Classification </option>
+            <option disabled>--------------------</option>
+            @foreach($classifications as $key => $classification)
+            <option 
+            @if ($classification == old('classifications', isset($video->classifications) ? $video->classifications : null )) selected="selected" @endif
+            value="{{$classification}}">{{$classification}}</option>
+            @endforeach
+        </select>
+        @error('classifications')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
@@ -180,13 +137,21 @@
     </div>
 </div>
 
+
+
 <div class="form-group row">
-        <label for="classification" class="col-md-4 col-form-label text-md-right">{{ __('Duration') }}</label>
+        <label for="classification" class="col-md-4 col-form-label text-md-right">{{ __('Show Duration') }}</label>
         <div class="col-md-6">
       
             <div class="row">
                 <div class="col-sm">
-                    <input value="{{ old('start_date') }}" class="form-control @error('start_date') is-invalid @enderror" type="date" name="start_date" id="start_date">
+                    <input  
+                            value="{{ old('start_date', isset($video->start_date) ? $video->start_date : null ) }}"
+                            class="form-control @error('start_date') is-invalid @enderror" 
+                            type="date" 
+                            name="start_date" 
+                            id="start_date"
+                        />
                     @error('start_date')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -194,7 +159,13 @@
                     @enderror
                 </div>
                 <div class="col-sm">
-                    <input value="{{ old('end_date') }}" class="form-control @error('end_date') is-invalid @enderror" type="date" name="end_date" id="end_date">
+                        <input  
+                        value="{{ old('end_date', isset($video->end_date) ? $video->end_date : null ) }}"
+                        class="form-control @error('end_date') is-invalid @enderror" 
+                        type="date" 
+                        name="end_date" 
+                        id="end_date"
+                    />
                     @error('end_date')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -209,18 +180,42 @@
 
 
 
-
-
 <div class="form-group row">
-    <label for="description" class="col-md-4 col-form-label text-md-right">{{ __('Description') }}</label>
+    <label for="description" class="col-md-4 col-form-label text-md-right">{{ __('Short Description') }}</label>
 
     <div class="col-md-6">
-        <textarea name="description" type="textarea" class="form-control @error('description') is-invalid @enderror" name="description" required autocomplete="description">{{   old('description')  }}</textarea>
-        @error('description')
+        <textarea   
+        rows="5" 
+        name="synopsis" 
+        type="textarea" 
+        class="form-control @error('synopsis') is-invalid @enderror" 
+        name="synopsis"  
+        >{{ old('synopsis', isset($video->synopsis) ? $video->synopsis : null ) }}</textarea>
+        @error('synopsis')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
         @enderror
+    </div>
+</div>
+
+
+<div class="form-group row">
+    <label for="description" class="col-md-4 col-form-label text-md-right">{{ __('Long Description') }}</label>
+
+    <div class="col-md-6">
+            <textarea   
+            rows="10" 
+            name="description" 
+            type="textarea" 
+            class="form-control @error('description') is-invalid @enderror" 
+            name="description"  
+            >{{ old('description', isset($video->description) ? $video->description : null ) }}</textarea>
+            @error('description')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
     </div>
 </div>
 <div class="form-group row mb-0">

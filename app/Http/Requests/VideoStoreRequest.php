@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class VideoStoreRequest extends FormRequest
@@ -39,8 +40,8 @@ class VideoStoreRequest extends FormRequest
                 'casts'                 => ['required','string', 'max:255'],
                 'director'              => ['required','string', 'max:255'],
                 'duration'              => ['required'],
-                'classification'        => ['required'],
-                'year_of_release'       => ['required'],
+                'classifications'       => ['required', Rule::notIn(['0']), 'string'],
+                'year_of_release'       => ['required', Rule::notIn(['0']), 'integer'],
                 'start_date'            => ['required','date_format:Y-m-d','before_or_equal:date_end'],
                 'end_date'              => ['required','date_format:Y-m-d','after_or_equal:date_end'],
       
