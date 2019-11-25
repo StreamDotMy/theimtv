@@ -15,8 +15,8 @@
             <td><a href="{{ route('users.show',$user) }} ">{{ $user->name }}</a></td>
             <td>{{ $user->email }}</td>
             <td>
-                <a class="btn-sm btn-primary" href="{{ route('users.edit',$user) }} "><i class="fa fa-edit"></i> Edit</a>
-                <a  onclick="return confirm('Are you sure?')" class="btn-sm btn-danger" href="{{ route('users.delete',$user) }} "><i class="fa fa-trash"></i> Delete</a>
+                <a class="btn btn-primary" href="{{ route('users.edit',$user) }} "><i class="fa fa-edit"></i></a>
+                <a  onclick="return confirm('Are you sure?')" class="btn btn-danger" href="{{ route('users.delete',$user) }} "><i class="fa fa-trash"></i></a>
             </td>
         </tr>
     <?php endForeach;?>

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\ConvertVideoForStreaming;
+use Image;
 
 
 class VideoController extends Controller
@@ -41,17 +42,15 @@ class VideoController extends Controller
 	    $categories = VideoCategory::all()->pluck('title', 'id');
 
         if($id){
-            $videos =  Video::where([['video_category_id','=',$id]])
-                       ->orderBy('ordering', 'asc')
-                       ->paginate(50);
-        }else{
-            $videos =  Video::orderBy('ordering', 'asc')
-                                       ->paginate(50);
-        }
+           $by_category = VideoCategory::find($id);
+           //$by_category = VideoCategory::whereIn('id', array($id) )->paginate(50);
 
-  
-        return view('videos.index',compact('videos','categories','id'));
-               //->with('i', (request()->input('page', 1) - 1) * 5);
+           //dd($by_category);
+           return view('videos.index',compact('by_category','categories','id'));
+        }else{
+            $videos =  Video::orderBy('ordering', 'asc')->paginate(50);
+            return view('videos.index',compact('videos','categories','id'));
+        }      
     }
 
     public function category($id)
@@ -91,7 +90,9 @@ class VideoController extends Controller
         $video->genres()->attach( $request->input('genres') ); 
         $video->categories()->attach( $request->input('categories') ); 
 
-        return redirect()->route('videos.index')->with('message', 'Video successfully added.');
+        //return redirect()->route('videos.index')->with('message', 'Video successfully added.');
+        return redirect()->route('videos.upload',$video)
+        ->with('success','Upload video');
     }
 
     /**
@@ -103,8 +104,15 @@ class VideoController extends Controller
     
     public function show(Video $video)
     {
-        $categories = $video->categories()->get();
-        return view('videos.show',compact('video','categories'));
+        //$categories = $video->categories()->get();
+        //$genres = $video->genres()->get();
+        $categories = VideoCategory::all()->pluck('title', 'id');  
+        $genres     = Genre::all()->pluck('title', 'id');
+        $current_categories = $video->categories()->get();
+        $current_genres     = $video->genres()->get();
+        $classifications = Video::classifications();
+        return view('videos.show',compact('video','categories','genres','current_categories','current_genres','classifications'));
+
     }
 
     /**
@@ -144,7 +152,7 @@ class VideoController extends Controller
         $video->update($request->all());
         $video->categories()->sync( $request->input('categories') );
         $video->genres()->sync( $request->input('genres') );
-        return redirect()->route('videos.index')
+        return redirect()->route('videos.show',$video)
                          ->with('success','Video updated successfully');
     }   
     
@@ -193,7 +201,6 @@ class VideoController extends Controller
         // validate
         $request->validate([
 			'file1'   =>  'required|mimetypes:video/mp4,video/mpeg,video/quicktime,video/x-flv,video/x-matroska,video/avi,video/msvideo,video/x-msvideo',
-
         ]);
     
         // store
@@ -218,8 +225,10 @@ class VideoController extends Controller
 		Log::info("Send job $id to EncodeVideo");
         ConvertVideoForStreaming::dispatch($video);
 
-        return redirect()->route('videos.index')
-                         ->with('success','Video uploaded successfully');
+        //return redirect()->route('videos.index')
+        //                 ->with('success','Video uploaded successfully');
+        return redirect()->route('videos.show',$video)
+        ->with('success','Video uploaded and being processed');
 
 
     }      
@@ -242,26 +251,69 @@ class VideoController extends Controller
 
     public function store_image(Request $request, $id)
     {
-		
-        // validate | accept jpg only
-        $request->validate([
-            'file1'   =>  'required|mimetypes:image/jpg,image/jpeg,image/png',
-            'file2'   =>  'required|mimetypes:image/jpg,image/jpeg,image/png'
-        ]);
+       
+        if($request->hasFile('file1'))
+        {
+            // validate | accept jpg only
+            $request->validate([
+                'file1'   =>  'mimetypes:image/jpg,image/jpeg,image/png',
+            ]);
+
+            // resize the image
+            $originalImage  = $request->file('file1');
+            $thumbnailImage = Image::make($originalImage);
+            $thumbnailImage->resize(186,265);
+            
+            // path
+            $path = storage_path('/app/public/videos/' . $id . '/image/');
+
+            // save the image jpg format defined by third parameter
+            $thumbnailImage->save( $path . 'image1.jpg' , 100, 'jpg');
+
+        }
+            
+        if($request->hasFile('file2'))
+        {
+
+            // validate | accept jpg only
+            $request->validate([
+                'file2'   =>  'mimetypes:image/jpg,image/jpeg,image/png',
+            ]);            
+
+            // resize the image
+            $originalImage  = $request->file('file2');
+            $thumbnailImage = Image::make($originalImage);
+            $thumbnailImage->resize(414,233);
+            
+            // path
+            $path = storage_path('/app/public/videos/' . $id . '/image/');
+
+            // save the image jpg format defined by third parameter
+            $thumbnailImage->save( $path . 'image2.jpg' , 100, 'jpg');
+            
+        } 
+
+        if($request->hasFile('file3'))
+        {            
+            // validate | accept jpg only
+            $request->validate([
+                'file3'   =>  'mimetypes:image/jpg,image/jpeg,image/png',
+            ]);            
+
+            // resize the image
+            $originalImage  = $request->file('file3');
+            $thumbnailImage = Image::make($originalImage);
+            $thumbnailImage->resize(1920,1080);
+            
+            // path
+            $path = storage_path('/app/public/videos/' . $id . '/image/');
+
+            // save the image jpg format defined by third parameter
+            $thumbnailImage->save( $path . 'image3.jpg' , 100, 'jpg' );          
+        }         
     
-     
-        // store the asset
-        Storage::disk('public')->putFileAs(
-            '/videos/' . $id . '/image', 
-            $request->file('file1'), 'image1.jpg');
-        
 
-        // store the asset
-        Storage::disk('public')->putFileAs(
-            '/videos/' . $id . '/image', 
-            $request->file('file2'), 'image2.jpg');            
-
-        return redirect()->route('videos.index')
+        return redirect()->route('videos.image',$id)
                          ->with('success','Image uploaded successfully');
     }      
 }

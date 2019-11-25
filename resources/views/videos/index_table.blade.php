@@ -1,8 +1,8 @@
 <table style="margin-bottom:20px">
     <tr>
         <td>
-        <select name="video_category_id" class="form-control" id="video_category_id" onchange="javascript:location.href = this.value;">
-            <option value="{{ route('videos.index') }} ">All</option>
+        <select name="video_category_id" class="form-control-lg" id="video_category_id" onchange="javascript:location.href = this.value;">
+            <option value="{{ route('videos.index') }} ">All Category</option>
             @foreach ($categories as $category_id => $category_title)
                 @if($category_id == $id)
                     <option selected value="{{ route('videos.by_category',$category_id) }} ">{{ $category_title  }}</option>
@@ -15,56 +15,64 @@
    </tr>
 </table>
 
+
+
 <table class="table">
     <thead class="thead-dark">
     <tr>
-      <th scope="col" style="width:5%">#</th>
-      <th scope="col" style="width:5%">Ordering</th>
-      <th scope="col" style="width:15%">Encode Duration</th>
-      <th scope="col" style="width:25%">Title</th>
+      <th scope="col" style="width:1%">#</th> 
+      <th scope="col" style="width:*">Title</th>
+      <th scope="col" style="width:20%">Genre</th>
       <th scope="col" style="width:20%">Actions</th>
     </tr>
     </thead>
   <tbody>
 
-    <?php 
-    foreach($videos as $video):
-      $t = round($video->processing_duration);
-      $duration = sprintf('%02d:%02d:%02d', ($t/3600),($t/60%60), $t%60);
-    
-    ?>
+
+@if( Route::currentRouteName() == 'videos.by_category')
+    @php
+        $videos = $by_category->videos
+    @endphp
+@endif
+
+
+@foreach ( $videos as $video)
         <tr>
             <th scope="row">{{ $video->id }}</th>
-            <th scope="row">{{ $video->ordering }}</th>
-            <th scope="row">{{ $duration }}</th>
-            <th scope="row" width=""> <a href="{{ route('videos.show',$video->id ) }} ">{{ $video->title }}</a></th>
-
+            <th scope="row" width=""> <a href="{{ route('videos.show',$video->id ) }} ">{{ $video->title }}</a>  </th>
+            <th scope="row" width=""> 
+            @foreach( $video->genres as $k => $genre)
+                <small>{{  $genre->title}},</small>
+            @endforeach
+            </th>
+            
             <td>
-      
                 <form action="{{ route('videos.destroy',$video->id) }}" method="POST">
-                <a class="btn btn-success" href="{{ route('videos.image', $video->id) }}"><i class="fa fa-image"></i></a>
                     @if( $video->is_uploaded == 0 )
-                      <a class="btn btn-primary" href="{{ route('videos.upload',$video->id) }}"><i class="fa fa-upload"></i></a>
+                    <a  data-toggle="tooltip" data-placement="top" title="Upload video" class="btn btn-primary" href="{{ route('videos.upload',$video->id) }}"><i class="fa fa-upload"></i></a>
                     @elseif( $video->processing_duration == 0 )
           
-                        <a class="btn btn-danger" href="#"><i class="fa fa-hourglass"></i></a>
+                    <a  data-toggle="tooltip" data-placement="top" title="Video still encoding" class="btn btn-danger" href="#"><i class="fa fa-hourglass"></i></a>
                     @else 
-                    <a class="btn btn-primary" href="{{ route('videos.upload',$video->id) }}"><i class="fa fa-play"></i></a>
+                    <a  data-toggle="tooltip" data-placement="top" title="Video is ready" class="btn btn-dark" href="{{ route('videos.upload',$video->id) }}"><i class="fa fa-check"></i></a>
                     @endif
-
-                    <a class="btn btn-info" href="{{ route('videos.show',$video->id) }}"><i class="fa fa-search"></i></a>
-    
-                    <a class="btn btn-primary" href="{{ route('videos.edit',$video->id) }}"><i class="fa fa-edit"></i></a>
-   
+             
+                    <a  data-toggle="tooltip" data-placement="top" title="Show asset" class="btn btn-success" href="{{ route('videos.show',$video->id) }}"><i class="fa fa-search"></i></a>
+                    {{--
+                    <a  data-toggle="tooltip" data-placement="top" title="Edit asset" class="btn btn-primary" href="{{ route('videos.edit',$video->id) }}"><i class="fa fa-edit"></i></a>
+                    --}}
                     @csrf
                     @method('DELETE')
       
-                    <button onclick="return confirm('Are you sure?')" type="submit" class="btn btn-info"><i class="fa fa-trash"></i></button>
+                    <button  data-toggle="tooltip" data-placement="top" title="Delete asset" onclick="return confirm('Are you sure?')" type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
                 </form>                
             </td>
         </tr>
-    <?php endForeach;?>
+    @endforeach
 
   </tbody>
 </table>
-{!! $videos->links() !!}
+@if( Route::currentRouteName() == 'videos.index')
+    {!! $videos->links() !!}
+@endif    
+

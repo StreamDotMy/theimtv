@@ -18,12 +18,11 @@
                     <li class="breadcrumb-item active" aria-current="page">Edit Video</li>
                 </ol>
             </nav>
-
-    
             @include('videos.edit_table')
     </div>
     
 </div>
+
 @endsection
 
 

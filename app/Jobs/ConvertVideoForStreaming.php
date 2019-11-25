@@ -46,9 +46,16 @@ class ConvertVideoForStreaming implements ShouldQueue
 
         $folder =  Storage::disk('public')->path( 'videos/' . $this->video->id);
         $source =  Storage::disk('public')->path( 'videos/' . $this->video->id . '/raw/source.mp4' );
+        
+        // OS detection
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
+        {
+            $ffmpeg 	 = "c:/ffmpeg/bin/ffmpeg.exe";
+        } else {
+            $ffmpeg 	 = "/usr/bin/ffmpeg";
+        }
 		
-		#$ffmpeg 	 = "c:/ffmpeg/bin/ffmpeg.exe";
-		$ffmpeg 	 = "/usr/bin/ffmpeg";
+		
 		$preset 	 = " -ac 2 -ab 64k -c:v libx264 -preset:v slower -crf 18 -threads 4 -r 24 -g 48 -keyint_min 48 -sc_threshold 0 -x264opts no-mbtree:bframes=1";
 
 		$h264['216']  = "{$ffmpeg} -y -i {$source} {$preset} -b:v  286k -s 384x216   {$folder}/216p.mp4";

@@ -13,7 +13,7 @@
                     @endforeach       
                 
                     <div class="form-check">
-                    <input name="categories[]" class="form-check-input" type="checkbox" {{ $checked }} value="{{ $id }}" id="defaultCheck1">
+                    <input @if( Route::currentRouteName() == 'videos.show') disabled @endif name="categories[]" class="form-check-input" type="checkbox" {{ $checked }} value="{{ $id }}" id="defaultCheck1">
                         <label class="form-check-label" for="defaultCheck1">
                             {{ $title }}
                         </label>
@@ -43,7 +43,7 @@
                     @endforeach       
                 
                     <div class="form-check">
-                    <input name="genres[]" class="form-check-input" type="checkbox" {{ $checked }} value="{{ $id }}" id="defaultCheck1">
+                    <input @if( Route::currentRouteName() == 'videos.show') disabled @endif name="genres[]" class="form-check-input" type="checkbox" {{ $checked }} value="{{ $id }}" id="defaultCheck1">
                         <label class="form-check-label" for="defaultCheck1">
                             {{ $title }}
                         </label>
