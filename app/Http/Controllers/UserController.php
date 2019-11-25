@@ -2,105 +2,83 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use App\User; // importing User Model from App/User.php
 
-use App\Http\Requests\CreateUserRequest; // Validation
-use App\Http\Requests\UpdateUserRequest; // Validation
+use App\Http\Requests\StoreCreateUser; // Validation rules
+use App\Http\Requests\StoreUpdateUser; // Validation rules
+
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
-{   
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+{
     public function index()
     {
-        $users = User::paginate(15);
-        return view('users.index', compact('users'));
+        $users = User::orderBy('name', 'ASC')->paginate(15);
+        return view('users.index')->with(compact('users'));
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\User
-     */
-    protected function create()
-    {
-       return view('users.create');
+    public function create()
+    {      
+        $levels = User::levels();
+        return view('users.create')->with(compact('levels'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(CreateUserRequest $request)
+    public function store(StoreCreateUser $request)
     {
+        // validation passed
         User::create([
-            'name'      => $request->input('name'),
-            'email'     => $request->input('email'),
-            'password'  => Hash::make($request->input('password')),
+            'name'          => $request->name,
+            'email'         => $request->email,
+            'user_level'    => $request->user_level,
+            'password'      => bcrypt($request->password),
         ]);
-        return redirect()->route('users.index')->with('message', 'User successfully added.');
+
+        return redirect( route('users.index') )
+               ->with('status', 'User successfully created!');
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $user = User::findOrFail(($id));
-        return view('users.show')->with('user',$user);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
     public function edit(User $user)
     {
-        //$user = User::findOrFail(($id));
-        return view('users.edit')->with('user',$user);
+        $levels = User::levels();
+        return view('users.edit')->with( compact('user','levels') );
     }
 
-
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(StoreUpdateUser $request, User $user)
     {
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
+        //User::whereId($id)->update([
+        $user->update([
+            'name'          => $request->name,
+            'email'         => $request->email,
+            'user_level'    => $request->user_level,
+            'password'      => bcrypt($request->password),
+        ]);
 
-        if( !empty( $request->input('new_password') ) ){
-            $user->password =  Hash::make($request->input('new_password'));
-        }
-        $user->save();        
-        return redirect()->route('users.index')->with('message', 'User successfully updated.');
+        return redirect( route('users.index') )
+        ->with('status', 'User '.$request->name.' successfully updated!');   
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function delete(User $user)
-    {
-        // check if id no equal to 1
-        if($user->id != 1){
-            $user->delete();
-            return redirect()->route('users.index')->with('message', 'User successfully deleted.');
+    public function delete(User $user){
+        if($user->id == 1)
+        {
+            return redirect( route('users.index') )
+            ->with('status', 'User '.$user->name.' can\'t be deleted!');
+
         } else {
-            return redirect()->back()->with('error', 'Cannot delete root !');
+            $user->delete();
+            return redirect( route('users.index') )
+            ->with('status', 'User '.$user->name.' successfully deleted !');
         }
+    }
+            
+    public function search(Request $request){
+        
+        $q = $request->get('query');
+        $users = User::where('name','LIKE','%'.$q.'%')
+                        ->orWhere('email','LIKE','%'.$q.'%')
+                        ->orderBy('name', 'ASC')
+                        ->paginate(15);
+        return view('users.index')->with(compact('users'));
     }
 }

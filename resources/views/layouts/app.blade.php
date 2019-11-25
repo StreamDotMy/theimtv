@@ -23,7 +23,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <script>
     $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+        $('[data-toggle="tooltip"]').tooltip()
     })
     </script>
     
@@ -58,12 +58,10 @@
                                 </li>
                             @endif
                         @else
-                            <li class="nav-item dropdown">
-                                <a class="nav-link" href="/users">Users</a>
-                            </li>
+  
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    Video 
+                                    Manage Video 
                                 </a>
 
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -86,7 +84,30 @@
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
+
+                                
+
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+  
+
+                                    @can('admin_access', Auth::user() )
+                                    <a class="dropdown-item" href="{{ route('users.index') }}">
+                                        {{ __('Manage Users') }}
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    @endcan
+
+                                    <a class="dropdown-item" href="{{ route('profile.show') }}">
+                                        {{ __('My Profile') }}
+                                    </a>
+
+                                    <a class="dropdown-item" href="{{ route('profile.change_password') }}">
+                                        {{ __('Change Password') }}
+                                    </a>
+
+
+
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

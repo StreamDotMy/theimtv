@@ -6,20 +6,23 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-            <li class="breadcrumb-item " aria-current="page"><a href="{{ route('users.index') }}">Users</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $user->name }}</li>
+            <li class="breadcrumb-item active" aria-current="page">My Profile</li>
         </ol>
     </nav>
 
     <div class="justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Update User</div>
+                <div class="card-header"><h2>{{ auth()->user()->name }}</h2></div>
                 <div class="card-body">
-                @include('users.partials.edit_form')
+                    @include('profiles.partials.show_table')
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-primary mt-2" href="{{ route('profile.edit') }}">Update</a>
                 </div>
             </div>
         </div>
     </div>       
 </div>   
+
 @endsection    

@@ -30,13 +30,39 @@ Route::group([
     'middleware'    => ['auth']
 ], function(){
 
-    Route::get('/', 'UserController@index')->name('index');
-    Route::get('/create', 'UserController@create')->name('create');
-    Route::post('/', 'UserController@store')->name('store');
-    Route::get('/{user}/edit', 'UserController@edit')->name('edit');
-    Route::post('/{user}/update', 'UserController@update')->name('update');
-    Route::get('/{user}/show', 'UserController@show')->name('show');
-    Route::get('/{user}/delete', 'UserController@delete')->name('delete');
+    Route::get('/',                 'UserController@index')->name('index');
+    Route::get('/create',           'UserController@create')->name('create');
+    Route::post('/store',           'UserController@store')->name('store');
+    Route::get('/{user}/edit',      'UserController@edit')->name('edit');
+    Route::post('/{user}/update',   'UserController@update')->name('update');
+    Route::get('/{user}/show',      'UserController@show')->name('show');
+    Route::get('/{user}/delete',    'UserController@delete')->name('delete');
+    Route::get('/search',           'UserController@search')->name('search');
+
+});
+
+Route::group(   [   
+    'prefix'        => 'profile',  // prefix for url pattern
+    'as'            => 'profile.', // prefix for route name
+    'middleware'    =>  [
+                            'auth', // authentication 
+                            'can:access_profile, App\User' // policy Model | can:<method name>, Model
+                        ]  
+    ], 
+    function(){
+
+        // http://localhost:8000/users/index
+        // route('users:index')
+        Route::get('/show',    'ProfileController@show')->name('show');
+
+        Route::get('create', 'ProfileController@create')->name('create');
+        Route::post('store', 'ProfileController@store')->name('store');
+
+        Route::get('/edit',    'ProfileController@edit')->name('edit');
+        Route::post('/update', 'ProfileController@update')->name('update');
+
+        Route::get('/change_password',   'ProfileController@change_password')->name('change_password');
+        Route::post('/update_password',  'ProfileController@update_password')->name('update_password');
 
 });
 
@@ -59,3 +85,4 @@ Route::resource('video_categories', 'VideoCategoryController');
 Route::resource('genres', 'GenreController');
 
 Auth::routes(['register' => true]);
+

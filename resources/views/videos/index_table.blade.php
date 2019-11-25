@@ -1,7 +1,7 @@
 <table style="margin-bottom:20px">
     <tr>
         <td>
-        <select name="video_category_id" class="form-control-lg" id="video_category_id" onchange="javascript:location.href = this.value;">
+        <select name="video_category_id" class="form-control" id="video_category_id" onchange="javascript:location.href = this.value;">
             <option value="{{ route('videos.index') }} ">All Category</option>
             @foreach ($categories as $category_id => $category_title)
                 @if($category_id == $id)
