@@ -29,6 +29,7 @@ class VideoController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->folder = Storage::disk('public')->path( 'videos' .'/' );
     }
 
     /**
@@ -67,10 +68,13 @@ class VideoController extends Controller
      */
     protected function create()
     {
-       $genres      = Genre::all()->pluck('title', 'id');  
-       $categories  = VideoCategory::all()->pluck('title', 'id');  
-       $classifications = Video::classifications();
-       return view('videos.create')->with( compact('categories','genres','classifications'));
+        
+        //echo $folder = Storage::url('videos' . '/' );
+ 
+        $genres      = Genre::all()->pluck('title', 'id');  
+        $categories  = VideoCategory::all()->pluck('title', 'id');  
+        $classifications = Video::classifications();
+        return view('videos.create')->with( compact('categories','genres','classifications'));
     }  
 
     /**
@@ -88,32 +92,23 @@ class VideoController extends Controller
 
         $id = $create->id;
         $video = Video::find($id);
+
+        // belongsToMany attachment
         $video->genres()->attach( $request->input('genres') ); 
         $video->categories()->attach( $request->input('categories') ); 
 
         // create master directory
-        $path = storage_path('/app/public/videos/' . $id);
-        File::makeDirectory($path, $mode = 0777, true, true);
+        //$folder = Storage::disk('public')->path( 'videos' .'/'. $id);
+        File::makeDirectory($this->folder, $mode = 0777, true, true);
 
-        // create original video directory
-        $path = storage_path('/app/public/videos/' . $id . '/raw/');
-        File::makeDirectory($path, $mode = 0777, true, true);
+        $folders = array('raw','mp4','images','hls','thumbnails');
 
-        // create images directory
-        $path = storage_path('/app/public/videos/' . $id . '/images/');
-        File::makeDirectory($path, $mode = 0777, true, true);
-
-        // create videos directory
-        $path = storage_path('/app/public/videos/' . $id . '/mp4/');
-        File::makeDirectory($path, $mode = 0777, true, true);
-
-        // create hls directory
-        $path = storage_path('/app/public/videos/' . $id . '/hls/');
-        File::makeDirectory($path, $mode = 0777, true, true);
-
-        // create scrubber image directory
-        $path = storage_path('/app/public/videos/' . $id . '/thumbnails/');
-        File::makeDirectory($path, $mode = 0777, true, true);
+        foreach($folders as $f)
+        {
+            // create folder
+            $path = $this->folder .'/'. $id .'/'. $f;
+            File::makeDirectory($path, $mode = 0777, true, true);
+        }
 
         //return redirect()->route('videos.index')->with('message', 'Video successfully added.');
         return redirect()->route('videos.upload',$video)
@@ -191,7 +186,8 @@ class VideoController extends Controller
     {
         if ($video->delete() )
         {
-            $path = storage_path('/app/public/videos/' . $video->id);
+         ;
+            $path = $this->folder .'/'. $video->id;
             if( File::isDirectory($path) )
             {
                 File::deleteDirectory($path);
@@ -236,7 +232,8 @@ class VideoController extends Controller
         ]);
     
         // storage path
-        $path = storage_path('/app/public/videos/' . $id . '/raw/');
+        //$path = storage_path('/app/public/videos/' . $id . '/raw/');
+        $path = $this->folder .'/'. $id .'/'. 'raw';
 
         // move to storage path
         $file =  $request->file('file1');
@@ -282,6 +279,8 @@ class VideoController extends Controller
     public function store_image(Request $request, $id)
     {
        
+        $path = $this->folder .'/'. $id .'/'. 'images';
+
         if($request->hasFile('file1'))
         {
             // validate | accept jpg only
@@ -295,9 +294,10 @@ class VideoController extends Controller
             $thumbnailImage->resize(186,265);
             
             // path
-            $path = storage_path('/app/public/videos/' . $id . '/images/');
+            //$path = storage_path('/app/public/videos/' . $id . '/images/');
+            //dd($path);
             // save the image jpg format defined by third parameter
-            $thumbnailImage->save( $path . 'image1.jpg' , 100, 'jpg');
+            $thumbnailImage->save( $path .'/'. 'image1.jpg' , 100, 'jpg');
 
         }
             
@@ -315,10 +315,10 @@ class VideoController extends Controller
             $thumbnailImage->resize(414,233);
             
             // path
-            $path = storage_path('/app/public/videos/' . $id . '/images/');
+            //$path = storage_path('/app/public/videos/' . $id . '/images/');
 
             // save the image jpg format defined by third parameter
-            $thumbnailImage->save( $path . 'image2.jpg' , 100, 'jpg');
+            $thumbnailImage->save( $path .'/'. 'image2.jpg' , 100, 'jpg');
             
         } 
 
@@ -335,10 +335,10 @@ class VideoController extends Controller
             $thumbnailImage->resize(1920,1080);
             
             // path
-            $path = storage_path('/app/public/videos/' . $id . '/images/');
+            //$path = storage_path('/app/public/videos/' . $id . '/images/');
 
             // save the image jpg format defined by third parameter
-            $thumbnailImage->save( $path . 'image3.jpg' , 100, 'jpg' );          
+            $thumbnailImage->save( $path .'/'. 'image3.jpg' , 100, 'jpg' );          
         }         
     
 

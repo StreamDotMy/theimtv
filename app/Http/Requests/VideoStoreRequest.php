@@ -42,8 +42,8 @@ class VideoStoreRequest extends FormRequest
                 'duration'              => ['required'],
                 'classifications'       => ['required', Rule::notIn(['0']), 'string'],
                 'year_of_release'       => ['required', Rule::notIn(['0']), 'integer'],
-                'start_date'            => ['required','date_format:Y-m-d','before_or_equal:date_end'],
-                'end_date'              => ['required','date_format:Y-m-d','after_or_equal:date_end'],
+                'start_date'            => ['required','date_format:Y-m-d','before_or_equal:end_date'],
+                'end_date'              => ['required','date_format:Y-m-d','after_or_equal:start_date'],
       
         ];
     }
