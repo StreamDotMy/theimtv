@@ -44,8 +44,10 @@ class ConvertVideoForStreaming implements ShouldQueue
     function process_video(){
         $start = microtime(true);
 
-        $folder =  Storage::disk('public')->path( 'videos/' . $this->video->id);
+        $folder =  Storage::disk('public')->path( 'videos/' . $this->video->id . '/mp4/');
         $source =  Storage::disk('public')->path( 'videos/' . $this->video->id . '/raw/source.mp4' );
+     //  $folder = storage_path('/app/public/videos/' . $id . '/mp4/');
+      // $source = storage_path('/app/public/videos/' . $id . '/raw/source.mp4');;
         
         // OS detection
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
@@ -95,7 +97,7 @@ class ConvertVideoForStreaming implements ShouldQueue
 
         ";
 
-        Storage::put( 'public/videos/' . $this->video->id . '/stream.smil', $smil );
+        Storage::put( 'public/videos/' . $this->video->id . '/mp4/stream.smil', $smil );
 
     }
 }

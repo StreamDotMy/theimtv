@@ -2,9 +2,9 @@
 @csrf
 <div class="card text-center" style="height:500px">
 
-@if( file_exists( $path = public_path() . '/storage/videos/' . $video->id  . '/image/image2.jpg' )) 
+@if( file_exists( $path = public_path() . '/storage/videos/' . $video->id  . '/images/image2.jpg' )) 
     <img    class ="img-thumbnail mt-3 mx-auto" 
-            src="/storage/videos/{{$video->id}}/image/image2.jpg" 
+            src="/storage/videos/{{$video->id}}/images/image2.jpg" 
     />
 @else   
     <img    class ="img-thumbnail mt-3 mx-auto" 

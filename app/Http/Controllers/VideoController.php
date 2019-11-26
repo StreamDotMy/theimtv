@@ -86,9 +86,34 @@ class VideoController extends Controller
             //->genres()->attach($request->input('genres'));
            // ->genres()->attach( $request->input('categories'));
 
-        $video = Video::find($create->id);
+        $id = $create->id;
+        $video = Video::find($id);
         $video->genres()->attach( $request->input('genres') ); 
         $video->categories()->attach( $request->input('categories') ); 
+
+        // create master directory
+        $path = storage_path('/app/public/videos/' . $id);
+        File::makeDirectory($path, $mode = 0777, true, true);
+
+        // create original video directory
+        $path = storage_path('/app/public/videos/' . $id . '/raw/');
+        File::makeDirectory($path, $mode = 0777, true, true);
+
+        // create images directory
+        $path = storage_path('/app/public/videos/' . $id . '/images/');
+        File::makeDirectory($path, $mode = 0777, true, true);
+
+        // create videos directory
+        $path = storage_path('/app/public/videos/' . $id . '/mp4/');
+        File::makeDirectory($path, $mode = 0777, true, true);
+
+        // create hls directory
+        $path = storage_path('/app/public/videos/' . $id . '/hls/');
+        File::makeDirectory($path, $mode = 0777, true, true);
+
+        // create scrubber image directory
+        $path = storage_path('/app/public/videos/' . $id . '/thumbnails/');
+        File::makeDirectory($path, $mode = 0777, true, true);
 
         //return redirect()->route('videos.index')->with('message', 'Video successfully added.');
         return redirect()->route('videos.upload',$video)
@@ -164,7 +189,14 @@ class VideoController extends Controller
      */
     public function destroy(Video $video)
     {
-        $video->delete();
+        if ($video->delete() )
+        {
+            $path = storage_path('/app/public/videos/' . $video->id);
+            if( File::isDirectory($path) )
+            {
+                File::deleteDirectory($path);
+            }
+        }
   
         return redirect()->route('videos.index')
                          ->with('success','Video deleted successfully');
@@ -203,21 +235,19 @@ class VideoController extends Controller
 			'file1'   =>  'required|mimetypes:video/mp4,video/mpeg,video/quicktime,video/x-flv,video/x-matroska,video/avi,video/msvideo,video/x-msvideo',
         ]);
     
-        // store
-        $path = public_path().'/videos/' . $id;
-        if(!File::isDirectory($path)){
-           // Storage::disk('public')->put('/videos/' . $id . '/raw.file' , $video);
-            Storage::disk('public')->putFileAs(
-                '/videos/' . $id . '/raw', 
-                $request->file('file1'), 'source.mp4'
-            );
-        }
+        // storage path
+        $path = storage_path('/app/public/videos/' . $id . '/raw/');
+
+        // move to storage path
+        $file =  $request->file('file1');
+     
+        $file->move($path , 'source.mp4' );
 
         // update metadata in video table        
         $video = Video::find($id);
         $video->is_uploaded = 1;
         $video->filename =  $request->file('file1')->getClientOriginalName();
-        $video->size =  Storage::disk('public')->size('/videos/' . $id . '/raw/source.mp4');
+        
         $video->save();
 
         // converting to H264 AAC for streaming
@@ -265,8 +295,7 @@ class VideoController extends Controller
             $thumbnailImage->resize(186,265);
             
             // path
-            $path = storage_path('/app/public/videos/' . $id . '/image/');
-
+            $path = storage_path('/app/public/videos/' . $id . '/images/');
             // save the image jpg format defined by third parameter
             $thumbnailImage->save( $path . 'image1.jpg' , 100, 'jpg');
 
@@ -286,7 +315,7 @@ class VideoController extends Controller
             $thumbnailImage->resize(414,233);
             
             // path
-            $path = storage_path('/app/public/videos/' . $id . '/image/');
+            $path = storage_path('/app/public/videos/' . $id . '/images/');
 
             // save the image jpg format defined by third parameter
             $thumbnailImage->save( $path . 'image2.jpg' , 100, 'jpg');
@@ -306,7 +335,7 @@ class VideoController extends Controller
             $thumbnailImage->resize(1920,1080);
             
             // path
-            $path = storage_path('/app/public/videos/' . $id . '/image/');
+            $path = storage_path('/app/public/videos/' . $id . '/images/');
 
             // save the image jpg format defined by third parameter
             $thumbnailImage->save( $path . 'image3.jpg' , 100, 'jpg' );          

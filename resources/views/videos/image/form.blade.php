@@ -24,7 +24,6 @@
                     </div>
 
                     <div class="card-body">
-                        <form action="{{ route('videos.update',$video->id) }}" method="POST">
                         <div class="col-md-12">
 
                             @include('videos.messages')
