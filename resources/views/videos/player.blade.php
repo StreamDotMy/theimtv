@@ -30,7 +30,10 @@
 
 @else
         <script type="text/javascript" src="//player.wowza.com/player/latest/wowzaplayer.min.js"></script>
+        
         <div id="playerElement" style="width:100%; height:0; padding:0 0 56.25% 0"></div>
+        
+        {{--
         <script type="text/javascript">
                 WowzaPlayer.create('playerElement',
                 {
@@ -50,4 +53,25 @@
                 }
                 );
         </script>
+        --}}
+        <script type="text/javascript">
+                WowzaPlayer.create("playerElement",
+                    {
+                    "license":"PLAY2-nCyJR-AhPvx-7e9YX-tD8h3-GYKG8",
+                    "sources":[{
+                    "sourceURL":"http://play.theimtv.com:1935/theimtv/_definst_/smil:{{ $video->id }}/mp4/stream.smil/playlist.m3u8"
+                    },
+                    {
+                    "sourceURL":""
+                    }],
+                    "title":"",
+                    "description":"",
+                    "autoPlay":false,
+                    "mute":false,
+                    "volume":75,
+                    "posterFrameURL":"/storage/videos/{{$video->id}}/images/image2.jpg",
+                    "endPosterFrameURL":"/storage/videos/{{$video->id}}/images/image2.jpg",
+                    }
+                );
+                </script>
 @endif
