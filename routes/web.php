@@ -20,7 +20,9 @@ Route::get('/dashboard', function () {
 });
 
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'DesktopController@index')->name('desktop.home');
+Route::get('/desktop', 'DesktopController@index')->name('desktop.index');
+Route::get('/play/{video}', 'DesktopController@play')->name('desktop.play');
 
 
 //Route::resource('users', 'UserController');
@@ -84,5 +86,5 @@ Route::resource('video_categories', 'VideoCategoryController');
 // genre 
 Route::resource('genres', 'GenreController');
 
-Auth::routes(['register' => true]);
+Auth::routes(['register' => false]);
 

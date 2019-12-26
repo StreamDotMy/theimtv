@@ -341,7 +341,6 @@ class VideoController extends Controller
             $thumbnailImage->save( $path .'/'. 'image3.jpg' , 100, 'jpg' );          
         }         
     
-
         return redirect()->route('videos.image',$id)
                          ->with('success','Image uploaded successfully');
     }      
