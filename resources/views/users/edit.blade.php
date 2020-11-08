@@ -5,7 +5,7 @@
     
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('desktop.home') }}">Home</a></li>
             <li class="breadcrumb-item " aria-current="page"><a href="{{ route('users.index') }}">Users</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ $user->name }}</li>
         </ol>

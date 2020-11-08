@@ -29,7 +29,8 @@ class VideoController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->folder = Storage::disk('public')->path( 'videos' .'/' );
+        //$this->folder = Storage::disk('public')->path( 'videos' .'/' );
+        $this->folder = Storage::disk('assets')->path( 'videos' .'/' );
     }
 
     /**

@@ -11,14 +11,14 @@
                 preload="none"
                 width="100%"
                 height="500px"
-                @if( file_exists( $path = public_path() . '/storage/videos/' . $video->id  . '/images/image2.jpg' )) 
-                        poster = "/storage/videos/{{$video->id}}/images/image2.jpg" 
+                @if( file_exists( $path = public_path() . '/playvideo/' . $video->id  . '/images/image2.jpg' )) 
+                        poster = "/playvideo/{{$video->id}}/images/image2.jpg" 
                 @else
                         poster = "/img/video/image2.png" 
                 @endif
                 data-setup="{}"
                 >
-                <source src="/storage/videos/{{ $video->id }}/mp4/1080p.mp4" type="video/mp4" />
+                <source src="/playvideo/{{ $video->id }}/mp4/1080p.mp4" type="video/mp4" />
                 <p class="vjs-no-js">
                 To view this video please enable JavaScript, and consider upgrading to a
                 web browser that

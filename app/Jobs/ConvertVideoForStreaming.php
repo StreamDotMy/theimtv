@@ -44,7 +44,8 @@ class ConvertVideoForStreaming implements ShouldQueue
     function process_video(){
         $start = microtime(true);
 
-        $path = Storage::disk('public')->path( 'videos/' . $this->video->id);
+        //$path = Storage::disk('public')->path( 'videos/' . $this->video->id);
+        $path = Storage::disk('assets')->path( 'videos/' . $this->video->id);
         $folder =  $path . '/mp4/';
         $source =  $path . '/raw/source.mp4';
         
@@ -98,7 +99,7 @@ class ConvertVideoForStreaming implements ShouldQueue
 
        // Storage::put( 'public/videos/' . $this->video->id . '/mp4/stream.smil', $smil );
         $path = '/videos/' . $this->video->id . '/mp4/stream.smil';
-        Storage::disk('public')->put($path, $smil);
+        Storage::disk('assets')->put($path, $smil);
         
 
 

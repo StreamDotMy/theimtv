@@ -17,7 +17,7 @@
           
                     <div class="col-lg-2 col-md-8 col-12">
                         <a href="{{ route('desktop.play', $video) }}" class="d-block mb-4 h-100">
-                        <img class="img-fluid img-thumbnail" src="/storage/videos/{{ $video->id }}/images/image1.jpg" alt="">
+                        <img class="img-fluid img-thumbnail" src="/playvideo/{{ $video->id }}/images/image1.jpg" alt="">
                         </a>
                     </div>
                 

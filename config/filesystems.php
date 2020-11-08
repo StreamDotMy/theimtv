@@ -48,6 +48,12 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'assets' => [
+            'driver' => 'local',
+            'root' => 'c:\laravel_projects\assets',
+        ],
+
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
